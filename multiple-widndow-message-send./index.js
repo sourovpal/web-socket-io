@@ -13,6 +13,7 @@ io.on('connection', (socket) => {
 
     
     socket.on('connect_user', (data)=>{
+        // socket.join(socket.request._query.user_id);
         if(browser_clients[data.user_id]){
             var arr = browser_clients[data.user_id];
             browser_clients[data.user_id] = [...arr, socket.id];
