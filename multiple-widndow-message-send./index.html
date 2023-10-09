@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+</head>
+<body>
+    
+    <input type="text" id="receiverId" placeholder="Receiver Id">
+    <br><br>
+    <input type="text" id="inputData">
+    <button onclick="myfunction()">Click</button>
+    <br><br>
+    <ul id="message">
+
+    </ul>
+
+</body>
+</html>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js'></script>
+<script>
+
+const url = "http://localhost:3000";
+
+
+// io.engine.generateId = function (req) {
+//     // generate a new custom id here
+//     return 1
+// }
+
+
+
+var navigator_info = window.navigator;
+var screen_info = window.screen;
+var uid = navigator_info.mimeTypes.length;
+uid += navigator_info.userAgent.replace(/\D+/g, '');
+uid += navigator_info.plugins.length;
+uid += screen_info.height || '';
+uid += screen_info.width || '';
+uid += screen_info.pixelDepth || '';
+console.log(uid);
+
+const socket = io.connect(url, { query: "user_id="+uid+"" });
+socket.emit('connect_user', {'user_id': uid});
+
+function myfunction(){
+    socket.emit('message', {'message': document.getElementById('inputData').value, id:document.getElementById('receiverId').value});
+}
+
+socket.on('reply', (data)=>{
+    console.log(data);
+    document.getElementById('message').innerHTML += `<li>${data.message}</li>`;
+});
+</script>
